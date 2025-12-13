@@ -1295,7 +1295,7 @@ def show_admin_panel():
         return
     
     # Admin tabs
-    tab1, tab2, tab3 = st.tabs(["User Management", "Upgrade Users", "System Stats"])
+    tab1, tab2, tab3, tab4 = st.tabs(["User Management", "Upgrade Users", "System Stats", "🔐 Change My Password"])
     
     with tab1:
         st.subheader("👥 All Users")
@@ -1422,6 +1422,64 @@ def show_admin_panel():
         - 5% conversion: ${((trial_users + free_users) * 0.05 * annual_price):,.0f}/year
         - 10% conversion: ${((trial_users + free_users) * 0.10 * annual_price):,.0f}/year
         """)
+    
+    with tab4:
+        st.subheader("🔐 Change My Password")
+        
+        st.info("Update your admin password to something more secure.")
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            current_password = st.text_input("Current Password", type="password", key="admin_current_pwd")
+            new_password = st.text_input("New Password", type="password", key="admin_new_pwd")
+            confirm_password = st.text_input("Confirm New Password", type="password", key="admin_confirm_pwd")
+            
+            # Password requirements
+            st.caption("🔒 **Requirements:** 12+ characters, uppercase, number, special character")
+            
+            if st.button("🔑 Change Password", type="primary", use_container_width=True):
+                # Validate current password
+                users = load_users()
+                stored_hash = users[st.session_state.username]['password']
+                current_hash = hashlib.sha256(current_password.encode()).hexdigest()
+                
+                if current_hash != stored_hash:
+                    st.error("❌ Current password is incorrect")
+                elif new_password != confirm_password:
+                    st.error("❌ New passwords don't match")
+                elif len(new_password) < 12:
+                    st.error("❌ Password must be at least 12 characters")
+                elif not any(c.isupper() for c in new_password):
+                    st.error("❌ Password must contain at least one uppercase letter")
+                elif not any(c.isdigit() for c in new_password):
+                    st.error("❌ Password must contain at least one number")
+                elif not any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in new_password):
+                    st.error("❌ Password must contain at least one special character")
+                else:
+                    # Update password
+                    new_hash = hashlib.sha256(new_password.encode()).hexdigest()
+                    users[st.session_state.username]['password'] = new_hash
+                    save_users(users)
+                    st.success("✅ Password changed successfully!")
+                    st.balloons()
+                    time.sleep(2)
+                    st.info("🔄 Please logout and login again with your new password.")
+        
+        with col2:
+            st.markdown("### 💡 Tips")
+            st.markdown("""
+            **Strong Password:**
+            - Use 15+ characters
+            - Mix upper/lowercase
+            - Include numbers
+            - Add symbols
+            - Avoid common words
+            - Don't reuse passwords
+            
+            **Example:**
+            `MySecure#Pass2025!`
+            """)
 
 def show_account_settings_page():
     """Display account settings and subscription management page"""
