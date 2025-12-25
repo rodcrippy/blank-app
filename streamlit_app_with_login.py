@@ -276,7 +276,7 @@ def show_intro_page():
     
     with col1:
         st.markdown("""
-        ## After 4 Years, Here's Your Visual
+        ## After 4 Years, Here's Your DCA Visual Zone for Entry.
         
         For over **4 years**, our community of **17,000+ members** in Crypto On Crack has been successfully using 
         the simplified DCA approach. You've seen the results. You've built wealth systematically. You've avoided the 
@@ -328,12 +328,12 @@ def show_intro_page():
         it even easier to execute consistently. See your daily DCA efforts in context. Understand where you are in the cycle. 
         Make decisions with clarity instead of emotion.
         
-        This isn't a new strategy—it's a **visualization of what we've been doing all along**, refined through 4 years 
+        This isn't a new strategy—it's a **visualization of what we've been doing all along**, refined through A decade of development ans over 4+years 
         of real-world testing with 17,000+ members.
         
         """)
         
-        if st.button("🚀 Continue to App", type="primary", use_container_width=True):
+        if st.button("🚀 Continue to App", type="primary", use_container_width=True): 
             st.session_state.intro_seen = True
             st.rerun()
     
